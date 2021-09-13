@@ -1,0 +1,19 @@
+body{
+    background-color:peachpuff;
+}
+
+.bg-darkgray{
+    background-color: darkgray;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.text-red {
+    color: red;
+}
+
+.text-black {
+    color: black;
+}
