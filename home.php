@@ -1,8 +1,25 @@
 <?php
 
     $page = "";
+    $profileToken = "";
+    $profileButton = "";
+    
 
-   
+    if(isset($_COOKIE['token'])){
+        $profileToken = $_COOKIE['token'];
+        $profileButton = '<a class="text-black mx-2" type="submit" href="?route=profile">Profile</a>';
+        $authButton = '
+            <form action="" method="post">
+                <button class="btn btn-sm btn-danger" type="submit" name="logout" value="'.$profileToken.'">Logout</button>
+            </form>
+        ';
+    } else {
+        $authButton = '
+            <form action = "" method="get">
+                <button class="btn btn-sm btn-success" type="submit" name="route" value="login">Login</button>
+            </form>
+        ';
+    }
 
     if(isset($_GET['route'])){
         // $page = $_GET['route'];
@@ -15,7 +32,7 @@
                 $page = $bugPage->buildView();
 
                 break;
-            case 'profile':
+            case 'profilepage':
 
                 
 
@@ -27,6 +44,14 @@
                 $bugDetailsPage = new BugDetailsPage();
 
                 $page = $bugDetailsPage->buildView();
+
+                break;
+            case 'login':
+                require 'loginPage.php';
+
+                $loginPage = new LoginPage();
+
+                $page = $loginPage->buildView();
 
                 break;
         }
@@ -51,11 +76,16 @@
     <title>Bug Logger</title>
 </head>
 <body class="container-fluid bg-offwhite">
-    <div class="bg-primary row p-2">
+    <div class="bg-primary row p-2 d-flex justify-content-between">
         <form action="" method="get">
             <a class="text-black mx-2" type="submit" href="?route=bugs">Bugs</a>
-            <a class="text-black mx-2" type="submit" href="?route=profile">Profile</a>
+            <?php
+                echo $profileButton;
+            ?>
         </form>
+    <?php
+        echo $authButton;
+    ?>
     </div>
     <?php
         echo $page;

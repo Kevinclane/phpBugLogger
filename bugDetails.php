@@ -7,7 +7,6 @@ class BugDetailsPage
 
     function __construct(){
         if(isset($_GET['id'])){
-            // $this->bug = $this->getBugData($_GET['id']);
             $this->setBugData($_GET['id']);
         }
     }

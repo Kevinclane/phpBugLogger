@@ -52,7 +52,7 @@ class BugPage
     private function buildAddForm(){
 
         $form = '
-        <div class="container p-3 my-3 bg-darkgray rounded">
+        <div class="container p-3 my-3 bg-darkgray rounded shadow-md">
             <form action="" method="post">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
@@ -78,7 +78,7 @@ class BugPage
     private function buildList(){
         if(isset($this->bugs) > 0){
 
-            $opening = '<div class="container-fluid bg-secondary p-3 mb-5">';
+            $opening = '<div class="container-fluid bg-secondary p-3 mb-5 rounded shadow-md">';
 
             $bodyHeader = '
             <div class="row border-bottom">
