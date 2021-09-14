@@ -5,8 +5,8 @@
     $profileButton = "";
     
 
-    if(isset($_COOKIE['token'])){
-        $profileToken = $_COOKIE['token'];
+    if(isset($_COOKIE['authtoken'])){
+        $profileToken = $_COOKIE['authtoken'];
         $profileButton = '<a class="text-black mx-2" type="submit" href="?route=profile">Profile</a>';
         $authButton = '
             <form action="" method="post">

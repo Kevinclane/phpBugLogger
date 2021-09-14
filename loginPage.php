@@ -258,12 +258,46 @@ class LoginPage{
       );
       $db->query($newUserQuery);
       $db->close();
+      
+      $this->getNSetToken($newUsername, $newPassword);
 
-      //delete leftover cookie
-      // setcookie('newuser', '', time() - 100);
-      // setcookie('newusername', $newUsername, time() - 100);
-      // setcookie('newemail', $newEmail, time() - 100);
+      // delete leftover cookies
+      setcookie('newuser', '', time() - 100);
+      setcookie('newusername', $newUsername, time() - 100);
+      setcookie('newemail', $newEmail, time() - 100);
     }
+
+  }
+
+  private function getNSetToken($username, $password){
+
+    $db = require "db.php";
+    $profileQuery = "SELECT * FROM users WHERE username = ". $username . " and password = ". $password;
+    $user = $db->query($profileQuery);
+
+    $generatedKey = $this->generateKey(40);
+
+    $tokenQuery = "INSERT INTO authtokens (userId, key) VALUES (".$user['id'].", ".$generatedKey.")";
+    $authtoken = $db->query($tokenQuery);
+
+    $db->close();
+
+    setcookie('authtoken', $authtoken['key']);
+
+  }
+
+  private function generateKey($length){
+
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randKey = [];
+    $max = mb_strlen($characters, '8bit') - 1;
+    for($i; $i < $length; $i++){
+      $randKey [] = $characters[randome_int(0, $max)];
+    }
+    
+    $this->cl.console_log(implode("", $pieces));
+    
+    return implode("", $pieces);
 
   }
 
