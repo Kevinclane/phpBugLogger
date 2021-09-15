@@ -15,7 +15,7 @@
         ';
     } else {
         $authButton = '
-            <form action = "" method="get">
+            <form action="" method="get">
                 <button class="btn btn-sm btn-success" type="submit" name="route" value="login">Login</button>
             </form>
         ';

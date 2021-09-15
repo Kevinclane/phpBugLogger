@@ -13,6 +13,11 @@ class BugPage
         $db = require "db.php";
         $query = "SELECT * FROM bug_reports";
         $this->bugs = $db->query($query);
+
+        $users = [];
+        $profileQuery = "SELECT * FROM users";
+
+
         $db->close();
 
         session_start();
@@ -23,7 +28,6 @@ class BugPage
         }
 
         if(isset($_POST['delete'])){
-            $this->cl.console_log("First Del Path");
             $this->deleteBug($_POST['delete']);
             $this->reload();
             return;
@@ -162,7 +166,7 @@ class BugPage
             );        
 
             $db->query($newBugQuery);
-            $db->close();        
+            $db->close();
         }
     }
 
@@ -172,8 +176,6 @@ class BugPage
         $delBugQuery = "DELETE FROM bug_reports WHERE id=$id;";
         $db->query($delBugQuery);
         $db->close();
-
-        $this->cl.console_log($id);
     }
 
     //#END REGION DB FUNCTIONS
