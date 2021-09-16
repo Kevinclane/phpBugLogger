@@ -1,64 +1,6 @@
 <?php
-
-    $page = "";
-    $profileToken = "";
-    $profileButton = "";
-    
-
-    if(isset($_COOKIE['authtoken'])){
-        $profileToken = $_COOKIE['authtoken'];
-        $profileButton = '<a class="text-black mx-2" type="submit" href="?route=profile">Profile</a>';
-        $authButton = '
-            <form action="" method="post">
-                <button class="btn btn-sm btn-danger" type="submit" name="logout" value="'.$profileToken.'">Logout</button>
-            </form>
-        ';
-    } else {
-        $authButton = '
-            <form action="" method="get">
-                <button class="btn btn-sm btn-success" type="submit" name="route" value="login">Login</button>
-            </form>
-        ';
-    }
-
-    if(isset($_GET['route'])){
-        // $page = $_GET['route'];
-        switch($_GET['route']){
-            case 'bugs':
-                require 'bugs.php';
-
-                $bugPage = new BugPage();
-
-                $page = $bugPage->buildView();
-
-                break;
-            case 'profilepage':
-
-                
-
-                //build profile view and set to page
-                break;
-            case 'bugdetails':
-                require 'bugDetails.php';
-
-                $bugDetailsPage = new BugDetailsPage();
-
-                $page = $bugDetailsPage->buildView();
-
-                break;
-            case 'login':
-                require 'loginPage.php';
-
-                $loginPage = new LoginPage();
-
-                $page = $loginPage->buildView();
-
-                break;
-        }
-
-    }
-
-
+require "authHandler.php";
+require "classLoader.php";
 ?>
 
 

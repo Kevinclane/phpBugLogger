@@ -2,12 +2,9 @@
 
 class BugPage
 {
-    public $cl;
-
     public $bugs;
     
     function __construct(){
-        $this->cl = require 'console_logger.php';
         
         //Load all bugs for the view
         $db = require "db.php";

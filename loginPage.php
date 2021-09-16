@@ -1,11 +1,6 @@
 <?php
 
-//Login view should either call to log the user in or to toggle to create account
-//Create Account view should either call to create account or toggle to login
-
 class LoginPage{
-
-  public $cl;
 
   public $newUser = false;
 
@@ -23,8 +18,6 @@ class LoginPage{
 
   function __construct(){
 
-    $this->cl = require 'console_logger.php';
-
     $this->checkNSetCookie();
 
     if(isset($_POST['togglenewuser'])){
@@ -33,39 +26,18 @@ class LoginPage{
       } else {
         setcookie('newuser', "true");
       }
-      $this->reload();
-    }
-
-    if(isset($_POST['login'])){
-      $this->login();
-      $this->redirect("bugs");
-    } 
-
-    //Going to need to pull this out of the loginPage and put it in it's own class. Probably not bad to move some of the functionality from login into the new class as well. The problem is that when you click logout on a page that is NOT the login page, the post never gets read. Maybe have these functions be built into the navbar as a required functionality.
-    if(isset($_POST['logout'])){
-      $this->cl.console_log("First stage logout");
-      $this->logout($_POST['logout']);
-      $this->redirect("home");
+      redirect('login');
     }
     
     if(isset($_POST['createaccount'])){
       $this->createAccount();
-      $this->redirect("bugs");
+      redirect("bugs");
     }
 
 
   } //construct
 
-  private function redirect($path){
-    switch($path){
-      case 'bugs':
-        Header("Location: http://localhost/buglogger/home.php?route=bugs", true);
-        break;
-      case 'home':
-        Header("Locationi: http://localhost/buglogger/home.php", true);
-        break;
-    }
-  }
+
 
   private function checkNSetCookie(){
     if(!isset($_COOKIE['newuser'])){
@@ -101,10 +73,6 @@ class LoginPage{
       $this->password = $_COOKIE['password'];
     }
 
-  }
-
-  private function reload(){
-    header("Location: http://localhost/buglogger/home.php?route=login", true);
   }
 
   public function buildView(){
@@ -210,29 +178,6 @@ class LoginPage{
     return $template;
   }
 
-  private function login(){
-
-    $username;
-    $password;
-    
-    if(isset($_POST['username'])){
-      $username = $_POST['username'];
-    }
-
-    if(isset($_POST['password'])){
-      $password = $_POST['password'];
-    }
-
-    $token = $this->getUser($username, $password);
-
-  }
-
-  private function logout($token){
-    $this->cl.console_log("In Logout");
-    $this->deleteToken($token);
-    setcookie("authtoken", "", time() - 1000);
-  }
-
   private function createAccount(){
 
     $newEmail = '';
@@ -286,7 +231,7 @@ class LoginPage{
       $db->query($newUserQuery);
       $db->close();
       
-      $this->getUser($newUsername, $newPassword);
+      getUser($newUsername, $newPassword);
 
       // delete leftover cookies
       setcookie('newuser', '', time() - 100);
@@ -294,84 +239,6 @@ class LoginPage{
       setcookie('newemail', $newEmail, time() - 100);
     }
 
-  }
-
-  private function getUser($dbusername, $dbpassword){
-    
-    $db = require "db.php";
-    $profileQuery = sprintf("SELECT * FROM users WHERE username = '%s' and password = '%s' LIMIT 1;",
-      $db->real_escape_string($dbusername),
-      $db->real_escape_string($dbpassword));
-    
-    $userList = $db->query($profileQuery);
-    $db->close();
-
-    $user;
-
-    foreach($userList as $u){
-      $user = $u;
-    }
-
-    $this->refreshToken($user);
-
-  }
-
-  private function refreshToken($user){
-
-    $db = require 'db.php';
-
-    $getTokenQuery = sprintf("SELECT * FROM authtokens WHERE userid = '%d'",
-      $db->real_escape_string($user['id']));
-
-    $tokenList = $db->query($getTokenQuery);
-
-    $token = [];
-
-    foreach($tokenList as $t){
-      $token = $t;
-    }
-
-    //delete old token
-    if($token != null){
-
-      $this->deleteToken($token['id']);
-
-    }
-    
-    $generatedKey = $this->generateKey(40);
-    
-    $createTokenQuery = sprintf("INSERT INTO authtokens (userid, token) VALUES ('%d', '%s')",
-    $user['id'], $generatedKey);
-    $db->query($createTokenQuery);
-    
-    $getTokenQuery = sprintf("SELECT * FROM authtokens WHERE userid = ".$user['id']);
-    $tokenList = $db->query($getTokenQuery);
-
-    foreach($tokenList as $t){
-      $token = $t;
-    }
-    
-    setcookie('authtoken', $token['token']);
-    
-  }
-
-  private function generateKey($length){
-
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $randKey = [];
-    $max = mb_strlen($characters, '8bit') - 1;
-    for($i=0; $i < $length; $i++){
-      $randKey [] = $characters[random_int(0, $max)];
-    }
-        
-    return implode("", $randKey);
-
-  }
-
-  private function deleteToken($id){
-    $db = require "db.php";
-    $delTokenQuery = sprintf("DELETE FROM authtokens WHERE id = ".$id);
-    $db->query($delTokenQuery);
   }
 
 }
