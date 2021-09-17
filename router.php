@@ -9,6 +9,8 @@
             break;
           case 'login':
             Header("Location: http://localhost/buglogger/home.php?route=login", true);
+          case 'landingpage':
+            Header("Location: http://localhost/buglogger/home.php?route=landingpage", true);
         }
       }
 ?>

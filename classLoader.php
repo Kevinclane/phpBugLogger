@@ -15,6 +15,11 @@ if(isset($_GET['route'])){
 
             break;
         case 'profilepage':
+            require 'profile.php';
+            
+            $profilePage = new ProfilePage();
+
+            $page = $profilePage->buildView();
 
             //build profile view and set to page
             break;

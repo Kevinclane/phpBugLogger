@@ -132,7 +132,7 @@ if(isset($_POST['login'])){
 
 
 if(isset($_COOKIE['authtoken'])){
-    $profileButton = '<a class="text-black mx-2" type="submit" href="?route=profile">Profile</a>';
+    $profileButton = '<a class="text-black mx-2" type="submit" href="?route=profilepage">Profile</a>';
     $authButton = '
         <form action="" method="post">
             <button class="btn btn-sm btn-danger" type="submit" name="logout" value="'.$_COOKIE['authtoken'].'">Logout</button>
